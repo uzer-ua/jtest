@@ -1,0 +1,26 @@
+* {
+	font-family: 'Helvetica', Arial, sans-serif;
+}
+
+table.list {
+	border-collapse: collapse;
+}
+table.list th, table.list td{
+	padding: 2px;
+	min-width: 100px;
+	border: 1px solid #999999;
+}
+table.list th {
+	font-weight: bold;
+	background-color: #BBBBBB;
+}
+table.list td.actions {
+	text-align: center;
+}
+
+.search-query {
+	padding: 4px;
+	border-radius: 10px;
+	border: 2px solid #DDDDDD;
+	margin-bottom: 10px;
+}

@@ -4,6 +4,8 @@ namespace Jtest;
 use Silex\Application;
 use Silex\ControllerProviderInterface;
 use Silex\Provider\TwigServiceProvider;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ContactController implements ControllerProviderInterface {
 	/**
@@ -19,7 +21,7 @@ class ContactController implements ControllerProviderInterface {
 		$controllers = $app['controllers_factory'];
 
 		$controllers->get('/', function (Application $app) {
-			return $this->index();
+			return new JsonResponse($this->getData());
 		});
 
 		return $controllers;
@@ -40,7 +42,7 @@ class ContactController implements ControllerProviderInterface {
 			$sql .= " WHERE id = ?";
 			$args[] = $id;
 		}
-		return $this->app['db']->fetchAssoc($sql, $args);
+		return $this->app['db']->fetchAll($sql, $args);
 	}
 
 	//TODO: overload for plain args

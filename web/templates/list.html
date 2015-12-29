@@ -1,0 +1,17 @@
+<input type="text" ng-model="search" class="search-query" placeholder="Search">
+<table class="list">
+	<thead>
+	<tr>
+		<th>Name</th>
+		<th>Tel</th>
+		<th></th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr ng-repeat="record in contacts | filter:search | orderBy:'name'">
+		<td>{{record.name}}</td>
+		<td>{{record.tel}}</td>
+		<td class="actions"><a>edit</a> | <a>delete</a></td>
+	</tr>
+	</tbody>
+</table>

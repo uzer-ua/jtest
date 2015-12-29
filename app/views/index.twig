@@ -2,9 +2,14 @@
 <html>
 	<head>
 		<title>Jtest page</title>
+		<link rel="stylesheet" href="/css/style.css" />
 		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular.min.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular-resource.min.js"></script>
+		<script src="/js/jmodel.js"></script>
+		<script src="/js/jtest.js"></script>
 	</head>
-	<body>
-		body content
+	<body ng-app="jtest">
+		<h1>Jtest contacts</h1>
+		<div ng-view></div>
 	</body>
 </html>
