@@ -1,4 +1,5 @@
-<input type="text" ng-model="search" class="search-query" placeholder="Search">
+<!-- have to hide search while some indexing issues-->
+<input type="text" ng-model="search" class="search-query" placeholder="Search" style="display: none;">
 <button ng-click="new();" class="btn">New</button>
 <table class="list">
 	<thead>
@@ -12,7 +13,7 @@
 	<tr ng-repeat="record in contacts | filter:search">
 		<td>{{record.name}}</td>
 		<td>{{record.tel}}</td>
-		<td class="actions"><a ng-click="edit();" index="{{$index}}">edit</a> | <a ng-click="delete();" index="{{$index}}">delete</a></td>
+		<td class="actions"><a ng-click="edit();" index="{{record.id}}">edit</a> | <a ng-click="delete();" index="{{record.id}}">delete</a></td>
 	</tr>
 	</tbody>
 </table>
