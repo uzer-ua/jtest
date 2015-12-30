@@ -10,7 +10,8 @@ $app['debug'] = true;
 
 require __DIR__.'/../app/registers.php';
 
-$app->mount('/contact', new Jtest\ContactController());
+//I'd rather mount to /contact but I haven't succeed to make this strange trailing-slash routing work correctly with Angular $resource
+$app->mount('/', new Jtest\ContactController());
 
 $app->run();
 ?>

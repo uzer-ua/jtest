@@ -4,8 +4,7 @@ namespace Jtest;
 use Silex\Application;
 use Silex\ControllerProviderInterface;
 use Silex\Provider\TwigServiceProvider;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 class ContactController implements ControllerProviderInterface {
 	/**
@@ -18,10 +17,55 @@ class ContactController implements ControllerProviderInterface {
 		$app->get('/', function () {
 			return $this->index();
 		});
+		$app->before(function (Request $request) {
+			if (strpos($request->headers->get('Content-Type'), 'application/json') === 0) {
+				$data = json_decode($request->getContent(), true);
+				$request->request->replace(is_array($data) ? $data : array());
+			}
+		});
 		$controllers = $app['controllers_factory'];
 
-		$controllers->get('/', function (Application $app) {
-			return new JsonResponse($this->getData());
+		$controllers->get('contact', function (Application $app) {
+			return $app->json($this->getData());
+		});
+		$controllers->get('contact/{id}', function ($id) use ($app) {
+			$data = $this->getContact($id);
+			if ($data) {
+				return $app->json($data, 200);
+			}
+			else {
+				return $app->json(null, 404);
+			}
+		});
+		$controllers->post('contact', function (Request $request) use ($app) {
+			$record = array(
+				'name' => $request->request->get('name'),
+				'tel'  => $request->request->get('tel')
+			);
+			$record['id'] = $this->save($record);
+			if ($record['id']) {
+				return $app->json($record, 201);
+			}
+			else {
+				return $app->json(null, 400);
+			}
+		});
+		$controllers->put('contact/{id}', function ($id, Request $request) use ($app) {
+			$record = array(
+				'id' => $id,
+				'name' => $request->request->get('name'),
+				'tel'  => $request->request->get('tel')
+			);
+			$this->save($record);
+			return $app->json(null, 204);
+		});
+		$controllers->delete('contact/{id}', function ($id) use ($app) {
+			if ($this->delete($id)) {
+				return $app->json(null, 204);
+			}
+			else {
+				return $app->json(null, 404);
+			}
 		});
 
 		return $controllers;
@@ -35,14 +79,15 @@ class ContactController implements ControllerProviderInterface {
 	}
 
 	//TODO: move to model
-	private function getData ($id = null) {
+	private function getData () {
 		$sql = "SELECT * FROM contacts";
-		$args = array();
-		if ($id) {
-			$sql .= " WHERE id = ?";
-			$args[] = $id;
-		}
-		return $this->app['db']->fetchAll($sql, $args);
+		return $this->app['db']->fetchAll($sql);
+	}
+
+	private function getContact ($id) {
+		$sql = "SELECT * FROM contacts WHERE id = ?";
+		$args = array($id);
+		return $this->app['db']->fetchAssoc($sql, $args);
 	}
 
 	//TODO: overload for plain args

@@ -1,4 +1,5 @@
 <input type="text" ng-model="search" class="search-query" placeholder="Search">
+<button ng-click="new();" class="btn">New</button>
 <table class="list">
 	<thead>
 	<tr>
@@ -8,10 +9,36 @@
 	</tr>
 	</thead>
 	<tbody>
-	<tr ng-repeat="record in contacts | filter:search | orderBy:'name'">
+	<tr ng-repeat="record in contacts | filter:search">
 		<td>{{record.name}}</td>
 		<td>{{record.tel}}</td>
-		<td class="actions"><a>edit</a> | <a>delete</a></td>
+		<td class="actions"><a ng-click="edit();" index="{{$index}}">edit</a> | <a ng-click="delete();" index="{{$index}}">delete</a></td>
 	</tr>
 	</tbody>
 </table>
+
+<ngdialog ng-show="show">
+	<div class='overlay' ng-click='cancel()'></div>
+	<div class="dialog">
+		<div class="header">
+			<div class='close' ng-click='cancel()'>X</div>
+		</div>
+
+		<div class="content">
+			<form name="myForm">
+				<div style="padding: 2px;">
+					<label>Name</label>
+					<input type="text" name="name" ng-model="contact.name" required />
+				</div>
+				<div style="padding: 2px;">
+					<label>Phone</label>
+					<input type="text" name="tel" ng-model="contact.tel" required />
+				</div>
+			</form>
+		</div>
+		<div class="footer">
+			<button ng-click="save()" ng-disabled="myForm.$invalid" class="btn btn-ok">Save</button>
+			<button ng-click="hide()" class="btn btn-cancel">Cancel</button>
+		</div>
+	</div>
+</ngdialog>
